@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const User = require("../users/users");
 const bycrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+
+
 const {
 	registerValidation,
 	loginValidation,
@@ -41,11 +44,15 @@ router.post("/login", async (req, res) => {
 	});
 	try {
 		const userConfirmation = await User.findOne({ email: req.body.email });
-        if (!userConfirmation) return res.status(400).send("User not Exist");
+		if (!userConfirmation) return res.status(400).send("User not Exist");
+		
         const validate = await bycrypt.compare(req.body.password, userConfirmation.password)
-        if (!validate) return res.status(400).send('Invalid Password')
+		if (!validate) return res.status(400).send('Invalid Password')
 
-		res.send( `Welcome ${userConfirmation.name}`);
+		const token = jwt.sign({ id: userConfirmation._id }, process.env.SECRET_JWT)
+		if (!token) return res.status(500)
+		
+		res.header('auth-token', token).send(token)
 	} catch (err) {
 		res.status(400).send(err);
 	}
