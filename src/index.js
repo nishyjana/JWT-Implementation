@@ -10,7 +10,8 @@ mongoConnection()
 app.use(express.json())
 
 app.use('/api/user', authRoute)
-app.use('/api',post)
+app.use('/api', post)
+app.get('/',(req,res)=> res.send('Server is Running.....................................'))
 
 app.listen(3000, () =>
   console.log('Server is Running.....................................')
