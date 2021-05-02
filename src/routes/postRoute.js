@@ -9,7 +9,7 @@ router.get("/post", verify, async (req, res) => {
 	res.json(posts);
 });
 
-router.post("/post", async (req, res) => {
+router.post("/post",verify, async (req, res) => {
 	const token = req.header("auth-token");
 	if (!token) return res.status(400).send("access Denied");
 
