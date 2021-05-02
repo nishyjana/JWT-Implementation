@@ -1,16 +1,17 @@
 const express = require('express')
 const app = express()
 const mysqlConnection = require('./connection/mysql')
-const mongoConnection = require('./connection/mongodb');
+const mongoConnection = require('./connection/mongodb')
+const post = require('./routes/postRoute')
+const authRoute = require('./routes/authRoute')
 
-mongoConnection();
-
-
-const authRoute = require('./routes/auth')
+mongoConnection()
 
 app.use(express.json())
 
 app.use('/api/user', authRoute)
+app.use('/api', post)
+app.get('/',(req,res)=> res.send('Server is Running.....................................'))
 
 app.listen(3000, () =>
   console.log('Server is Running.....................................')
